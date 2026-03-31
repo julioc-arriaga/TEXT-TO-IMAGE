@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GenerateImageRequest, HistoryImage, HistoryItem, PredictionStatusResponse, Resolution } from "@/app/lib/text2image/types";
 import {
-  STABLE_DIFFUSION_MODEL_VERSION,
+  STABLE_DIFFUSION_MODEL_REF,
   SUPPORTED_RESOLUTIONS,
 } from "@/app/lib/text2image/constants";
 import PromptForm from "@/components/text-to-image/PromptForm";
@@ -287,7 +287,7 @@ export default function TextToImageApp() {
           images,
           request,
           createdAt,
-          modelVersion: STABLE_DIFFUSION_MODEL_VERSION,
+          modelVersion: STABLE_DIFFUSION_MODEL_REF,
           progress: result.progress,
         });
 
@@ -300,7 +300,7 @@ export default function TextToImageApp() {
           scheduler: request.scheduler,
           numInferenceSteps: request.numInferenceSteps,
           guidanceScale: request.guidanceScale,
-          modelVersion: STABLE_DIFFUSION_MODEL_VERSION,
+          modelVersion: STABLE_DIFFUSION_MODEL_REF,
           createdAt,
           images: [
             {

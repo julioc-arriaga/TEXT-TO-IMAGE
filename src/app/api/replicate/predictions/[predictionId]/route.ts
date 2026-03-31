@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Replicate from "replicate";
-import { STABLE_DIFFUSION_MODEL_VERSION } from "@/app/lib/text2image/constants";
+import { STABLE_DIFFUSION_MODEL_REF } from "@/app/lib/text2image/constants";
 import {
   createReplicateClient,
   friendlyReplicateError,
@@ -51,7 +51,7 @@ export async function GET(
       {
         predictionId,
         status,
-        modelVersion: STABLE_DIFFUSION_MODEL_VERSION,
+        modelVersion: STABLE_DIFFUSION_MODEL_REF,
         output,
         error,
         createdAt: prediction?.created_at ?? undefined,

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import Replicate from "replicate";
 import {
-  STABLE_DIFFUSION_MODEL_VERSION,
+  STABLE_DIFFUSION_MODEL_REF,
+  STABLE_DIFFUSION_VERSION_ID,
 } from "@/app/lib/text2image/constants";
 import type { GenerateImageRequest } from "@/app/lib/text2image/types";
 import {
@@ -62,8 +63,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const prediction = await (replicate as any).predictions.create({
-      version: STABLE_DIFFUSION_MODEL_VERSION,
+    const prediction = await replicate.predictions.create({
+      version: STABLE_DIFFUSION_VERSION_ID,
       input: {
         prompt,
         negative_prompt: negativePrompt,
@@ -79,7 +80,7 @@ export async function POST(request: Request) {
       {
         predictionId: prediction.id,
         status: prediction.status,
-        modelVersion: STABLE_DIFFUSION_MODEL_VERSION,
+        modelVersion: STABLE_DIFFUSION_MODEL_REF,
         createdAt: Date.now(),
       },
       { status: 200 }
