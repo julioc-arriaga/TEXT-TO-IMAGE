@@ -3,11 +3,19 @@ Welcome to the NextJS base template bootstrapped using the create-next-app. This
 Getting Started
 Hit the run button to start the development server.
 
-You can start editing the page by modifying pages/index.tsx. The page auto-updates as you edit the file.
+This app is a text-to-image generator backed by Replicate (Stable Diffusion).
 
-API routes can be accessed on /api/hello. This endpoint can be edited in pages/api/hello.ts.
+1. Add your Replicate API token to Replit Secrets as `REPLICATE_API_TOKEN`.
+2. Run the app (Hit the run button or `npm run dev`).
+3. Open the homepage, enter a prompt, and click `Generate`.
 
-The pages/api directory is mapped to /api/*. Files in this directory are treated as API routes instead of React pages.
+You can start editing the UI by modifying `src/app/page.tsx` and the components under `src/components/text-to-image/`.
+
+API routes are under `/api/replicate/*` and handle polling + generation:
+- `src/app/api/replicate/generate-image/route.ts` creates a prediction
+- `src/app/api/replicate/predictions/[predictionId]/route.ts` polls prediction progress/output
+
+Generated images are stored locally in your browser (localStorage) for the paginated history/gallery.
 
 Learn More
 To learn more about Next.js, take a look at the following resources:
