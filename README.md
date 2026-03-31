@@ -17,6 +17,21 @@ API routes are under `/api/replicate/*` and handle polling + generation:
 
 Generated images are stored locally in your browser (localStorage) for the paginated history/gallery.
 
+### See the exact API error (browser DevTools)
+
+There is no **“Failing”** tab in DevTools. Use the **Network** panel and inspect the response body:
+
+1. Open your app in the preview (or a normal browser tab).
+2. Open DevTools:
+   - **Chrome / Edge / Brave:** `F12` or `Ctrl+Shift+I` (Windows/Linux) / `Cmd+Option+I` (Mac).
+   - If you only see **Console**, look at the **top row of tabs** and click **Network**. If tabs are cramped, click the `»` menu and choose **Network**.
+3. With Network open, click **Generate** again so a new request appears.
+4. In the **filter** box, type `generate-image` (or `replicate`).
+5. Click the row for **`generate-image`** (status may be 500).
+6. Open the **Response** (or **Preview**) sub-panel: that is the JSON from your Next.js route, usually `{ "error": "…" }` with Replicate’s message.
+
+The app also logs a copy under **`[text2image] Request failed`** in the **Console** when a fetch fails.
+
 Learn More
 To learn more about Next.js, take a look at the following resources:
 

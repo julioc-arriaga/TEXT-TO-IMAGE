@@ -11,6 +11,19 @@ import {
 } from "@/app/lib/replicate/auth";
 
 export async function POST(request: Request) {
+  try {
+    return await postGenerateImage(request);
+  } catch (e) {
+    console.error("generate-image (unhandled):", e);
+    const message = e instanceof Error ? e.message : String(e);
+    return NextResponse.json(
+      { error: message || "Unexpected server error." },
+      { status: 500 }
+    );
+  }
+}
+
+async function postGenerateImage(request: Request) {
   let replicate: Replicate;
   try {
     replicate = createReplicateClient();
@@ -76,9 +89,19 @@ export async function POST(request: Request) {
       },
     });
 
+    const pid = prediction?.id;
+    if (!pid || typeof pid !== "string") {
+      return NextResponse.json(
+        {
+          error: `Unexpected Replicate response (no prediction id): ${JSON.stringify(prediction).slice(0, 500)}`,
+        },
+        { status: 502 }
+      );
+    }
+
     return NextResponse.json(
       {
-        predictionId: prediction.id,
+        predictionId: pid,
         status: prediction.status,
         modelVersion: STABLE_DIFFUSION_MODEL_REF,
         createdAt: Date.now(),

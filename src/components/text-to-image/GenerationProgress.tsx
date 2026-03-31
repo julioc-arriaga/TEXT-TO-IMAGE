@@ -33,7 +33,9 @@ export default function GenerationProgress({
           <AlertTriangle className="mt-0.5 h-5 w-5" />
           <div className="min-w-0">
             <div className="text-sm font-semibold">Could not generate the image</div>
-            <div className="mt-1 text-xs leading-relaxed">{error}</div>
+            <div className="mt-1 whitespace-pre-wrap break-words text-xs leading-relaxed">
+              {error}
+            </div>
           </div>
         </div>
       </div>

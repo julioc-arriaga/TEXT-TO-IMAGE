@@ -69,18 +69,39 @@ function normalizeOutputToImages(output?: string[]): string[] {
 async function fetchJSON<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T> {
   const res = await fetch(input, init);
   const text = await res.text();
+  const url =
+    typeof input === "string"
+      ? input
+      : input instanceof URL
+        ? input.href
+        : "request";
+
   if (!res.ok) {
-    // Try to surface a helpful message from the server.
-    let serverErr: any = null;
+    let msg = "";
     try {
-      serverErr = JSON.parse(text);
+      const serverErr = JSON.parse(text) as Record<string, unknown>;
+      if (typeof serverErr?.error === "string") {
+        msg = serverErr.error;
+      } else if (typeof serverErr?.message === "string") {
+        msg = serverErr.message;
+      } else if (typeof serverErr?.detail === "string") {
+        msg = serverErr.detail;
+      }
     } catch {
-      serverErr = null;
+      /* not JSON */
     }
-    const msg =
-      serverErr?.error && typeof serverErr.error === "string"
-        ? serverErr.error
-        : `Request failed with ${res.status}.`;
+    if (!msg) {
+      msg = text.trim()
+        ? text.slice(0, 4000)
+        : `HTTP ${res.status} — no response body. Check DevTools → Network → select this request → Response.`;
+    }
+
+    console.error("[text2image] Request failed", {
+      url,
+      status: res.status,
+      responsePreview: text.slice(0, 4000),
+    });
+
     throw new Error(msg);
   }
 
