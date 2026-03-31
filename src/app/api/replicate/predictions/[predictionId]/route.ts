@@ -1,18 +1,22 @@
 import { NextResponse } from "next/server";
 import Replicate from "replicate";
 import { STABLE_DIFFUSION_MODEL_VERSION } from "@/app/lib/text2image/constants";
-
-const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN,
-});
+import {
+  createReplicateClient,
+  friendlyReplicateError,
+} from "@/app/lib/replicate/auth";
 
 export async function GET(
   _request: Request,
   { params }: { params: { predictionId: string } }
 ) {
-  if (!process.env.REPLICATE_API_TOKEN) {
-    throw new Error(
-      "The REPLICATE_API_TOKEN environment variable is not set. See README.md for instructions on how to set it."
+  let replicate: Replicate;
+  try {
+    replicate = createReplicateClient();
+  } catch (e) {
+    return NextResponse.json(
+      { error: (e as Error).message },
+      { status: 503 }
     );
   }
 
@@ -57,10 +61,8 @@ export async function GET(
     );
   } catch (error) {
     console.error("Error from Replicate API (get):", error);
-    return NextResponse.json(
-      { error: (error as Error).message || "Failed to fetch prediction." },
-      { status: 500 }
-    );
+    const msg = (error as Error).message || "Failed to fetch prediction.";
+    return NextResponse.json({ error: friendlyReplicateError(msg) }, { status: 500 });
   }
 }
 

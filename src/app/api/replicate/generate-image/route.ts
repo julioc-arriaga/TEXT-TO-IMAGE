@@ -4,15 +4,19 @@ import {
   STABLE_DIFFUSION_MODEL_VERSION,
 } from "@/app/lib/text2image/constants";
 import type { GenerateImageRequest } from "@/app/lib/text2image/types";
-
-const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN,
-});
+import {
+  createReplicateClient,
+  friendlyReplicateError,
+} from "@/app/lib/replicate/auth";
 
 export async function POST(request: Request) {
-  if (!process.env.REPLICATE_API_TOKEN) {
-    throw new Error(
-      "The REPLICATE_API_TOKEN environment variable is not set. See README.md for instructions on how to set it."
+  let replicate: Replicate;
+  try {
+    replicate = createReplicateClient();
+  } catch (e) {
+    return NextResponse.json(
+      { error: (e as Error).message },
+      { status: 503 }
     );
   }
 
@@ -82,8 +86,9 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     console.error("Error from Replicate API (create):", error);
+    const msg = (error as Error).message || "Failed to create prediction.";
     return NextResponse.json(
-      { error: (error as Error).message || "Failed to create prediction." },
+      { error: friendlyReplicateError(msg) },
       { status: 500 }
     );
   }

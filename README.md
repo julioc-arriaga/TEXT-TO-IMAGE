@@ -5,7 +5,7 @@ Hit the run button to start the development server.
 
 This app is a text-to-image generator backed by Replicate (Stable Diffusion).
 
-1. Add your Replicate API token to Replit Secrets as `REPLICATE_API_TOKEN`.
+1. Add your Replicate API token to Replit Secrets. **Use the exact key** `REPLICATE_API_TOKEN` (or `REPLICATE_TOKEN` / `REPLICATE_KEY` as fallbacks). Copy the token from [replicate.com/account/api-tokens](https://replicate.com/account/api-tokens). After saving Secrets, **restart** the Repl so the server picks up the variable.
 2. Run the app (Hit the run button or `npm run dev`).
 3. Open the homepage, enter a prompt, and click `Generate`.
 
